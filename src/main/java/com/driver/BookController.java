@@ -60,9 +60,7 @@ public class BookController {
     public ResponseEntity<Book> getBookById(@PathVariable String s){
         int id=Integer.parseInt(s);
         Book requiredBook=null;
-        for(Book book:bookList){
-            if(book.getId()==id) requiredBook=book;
-        }
+        requiredBook=getBookList().get(id);
         return new ResponseEntity<>(requiredBook,HttpStatus.FOUND);
     }
 
@@ -72,28 +70,21 @@ public class BookController {
     @DeleteMapping("/delete-book-by-id/{id}")
     public ResponseEntity<String> deleteBookById(@PathVariable String s){
         int id=Integer.parseInt(s);
-        Book requiredBook=null;
-        for(Book book:bookList){
-            if(book.getId()==id){
-                requiredBook=book;
-                bookList.remove(book);
-                break;
-            }
-        }
+       getBookList().remove(getBookList().get(id));
         return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
     }
 
     // get request /get-all-books
     // getAllBooks()
     public ResponseEntity<List<Book>> getAllBooks(){
-        return new ResponseEntity<>(bookList,HttpStatus.FOUND);
+        return new ResponseEntity<>(getBookList(),HttpStatus.FOUND);
     }
 
     // delete request /delete-all-books
     // deleteAllBooks()
     @DeleteMapping("/delete-all-books")
     public ResponseEntity<String> deleteAllBooks(){
-         bookList.clear();
+         getBookList().clear();
          return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
     }
 
@@ -103,7 +94,7 @@ public class BookController {
     @GetMapping("/get-books-by-author")
     public ResponseEntity<List<Book>> getBooksByAuthor(@RequestParam String author){
         List<Book> requiredBooks=new ArrayList<>();
-        for(Book book:bookList){
+        for(Book book:getBookList()){
             if(book.getAuthor().equalsIgnoreCase(author)) requiredBooks.add(book);
         }
         return new ResponseEntity<>(requiredBooks,HttpStatus.FOUND);
@@ -115,7 +106,7 @@ public class BookController {
     @GetMapping("/get-books-by-genre")
     public ResponseEntity<List<Book>> getBooksByGenre(@RequestParam String genre){
         List<Book> requiredBooks=new ArrayList<>();
-        for(Book book:bookList){
+        for(Book book:getBookList()){
             if(book.getAuthor().equalsIgnoreCase(genre)) requiredBooks.add(book);
         }
         return new ResponseEntity<>(requiredBooks,HttpStatus.FOUND);
