@@ -47,7 +47,9 @@ public class BookController {
     @PostMapping("/create-book")
     public ResponseEntity<Book> createBook(@RequestBody Book book){
         // Your code goes here.
+        book.setId(id);
         bookList.add(book);
+        id++;
         return new ResponseEntity<>(book, HttpStatus.CREATED);
     }
 
@@ -55,7 +57,8 @@ public class BookController {
     // pass id as path variable
     // getBookById()
     @GetMapping("/get-book-by-id/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable int id){
+    public ResponseEntity<Book> getBookById(@PathVariable String s){
+        int id=Integer.parseInt(s);
         Book requiredBook=null;
         for(Book book:bookList){
             if(book.getId()==id) requiredBook=book;
@@ -67,7 +70,8 @@ public class BookController {
     // pass id as path variable
     // deleteBookById()
     @DeleteMapping("/delete-book-by-id/{id}")
-    public ResponseEntity<Book> deleteBookById(@PathVariable int id){
+    public ResponseEntity<String> deleteBookById(@PathVariable String s){
+        int id=Integer.parseInt(s);
         Book requiredBook=null;
         for(Book book:bookList){
             if(book.getId()==id){
@@ -76,7 +80,7 @@ public class BookController {
                 break;
             }
         }
-        return new ResponseEntity<>(requiredBook,HttpStatus.OK);
+        return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
     }
 
     // get request /get-all-books
@@ -88,8 +92,9 @@ public class BookController {
     // delete request /delete-all-books
     // deleteAllBooks()
     @DeleteMapping("/delete-all-books")
-    public void deleteAllBooks(){
+    public ResponseEntity<String> deleteAllBooks(){
          bookList.clear();
+         return new ResponseEntity<>("Deleted Successfully",HttpStatus.OK);
     }
 
     // get request /get-books-by-author
